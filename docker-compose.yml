@@ -1,0 +1,61 @@
+version: '3'
+
+# container to run and execute PHP script
+services:
+ app:
+  container_name: laravel
+  build:
+   context: ./
+   dockerfile: ./app/app.dockerfile
+  volumes:
+   - ../develop/laravel:/home/laravel
+  networks:
+   - network
+  links:
+   - database
+  expose:
+   - 9000
+
+# container to run nginx
+ web:
+  container_name: web
+  build:
+   context: ./
+   dockerfile: ./web/web.dockerfile
+  working_dir: /var/www/html
+  volumes:
+   - ../develop/laravel:/home/laravel
+   - ../develop/conf.d:/etc/nginx/conf.d/
+  ports:
+   - 9000:9000
+   - 8081:80
+  networks:
+   - network
+  links:
+   - database
+
+# container to handle database
+ database:
+  container_name: db
+  build:
+   context: ./
+   dockerfile: ./db/db.dockerfile
+  volumes:
+   - dbdata:/var/lib/mysql
+  environment:
+   - MYSQL_DATA_DIR=/var/lib/mysql
+   - MYSQL_ROOT_PASSWORD=root_password
+   - MYSQL_USER=user
+   - MYSQL_PASSWORD=password
+   - MYSQL_DATABASE=database
+  ports:
+   - 3307:3307
+  networks:
+   - network
+
+volumes:
+ dbdata:
+
+networks:
+ network:
+  driver: bridge
