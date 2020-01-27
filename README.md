@@ -37,5 +37,7 @@ docker laravel 환경을 구성하면서 주의할 점들이 몇 가지 있다.
 
 단독으로 db container를 사용하려면 다음과 같이 명령어를 주면 된다. run.sh를 이용 할 경우 db.dockerfile에서 마지막 두 줄은 주석 해제 해야한다.
 ```bash
-> docker run -e MYSQL_DATABASE=/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_USER=user -e MYSQL_PASSWORD=password -it [DB_CONATINER]
+> docker run -e MYSQL_DATABASE=/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_USER=user -e MYSQL_PASSWORD=password -it [DB_CONATINER] # run.sh를 이용하려는 경우
+> docker run -v [MYSQL_DATA_FILE]:/var/lib/mysql -e MYSQL_DATABASE=/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_USER=user -e MYSQL_PASSWORD=password -it [DB_CONATINER] # 도커 볼륨을 이용하려는 경우
 ```
+이 때 `MYSQL_DATABASE` `MYSQL_ROOT_PASSWORD` `MYSQL_USER` `MYSQL_PASSWORD`를 지정해줘야 한다. `MYSQL_USER` `MYSQL_PASSWORD`는 선택이다.
